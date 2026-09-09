@@ -1,0 +1,713 @@
+/* ==========================================================================
+   视频抽帧工具 — 样式
+   设计基调：浅灰底 + 白卡片 + 靛蓝主色，时间段选区用琥珀色区分。
+   ========================================================================== */
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --ink: #111827;
+  --muted: #6b7280;
+  /* 与 Naive UI 默认主色保持一致（primary #18a058 / pressed #0c7a43） */
+  --brand: #18a058;
+  --brand-deep: #0c7a43;
+  --brand-soft: #e6f4ec;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --ok: #047857;
+  --ok-soft: #d1fae5;
+  --range: #f59e0b;
+  --range-soft: rgba(245, 158, 11, 0.18);
+  --stage: #0b1120;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 10px 30px rgba(16, 24, 40, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--brand-deep);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+  flex: 1;
+}
+
+/* ---------------- 顶栏 ---------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+}
+
+.logo {
+  display: inline-flex;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.brand-tag {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.lang-select {
+  width: 118px;
+}
+
+/* ---------------- Hero ---------------- */
+
+.hero {
+  text-align: center;
+  padding: 14px 0 24px;
+}
+
+.hero .n-h1 {
+  font-size: 30px;
+  margin: 0 0 10px;
+  letter-spacing: 0.3px;
+}
+
+.hero .n-p {
+  color: var(--muted);
+  margin: 0 auto;
+  max-width: 720px;
+  font-size: 15px;
+}
+
+/* ---------------- 拖放区（n-upload） ---------------- */
+
+.dropzone-upload {
+  display: block;
+}
+
+.dropzone-dragger {
+  text-align: center;
+}
+
+.drop-btn-row {
+  margin: 2px 0;
+}
+
+.drop-icon {
+  color: var(--brand);
+  line-height: 0;
+  margin-bottom: 8px;
+}
+
+.drop-title {
+  font-size: 16.5px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.drop-hint {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}
+
+.drop-privacy {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin: 12px 0 0;
+}
+
+.file-icon {
+  color: var(--brand);
+  line-height: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.file-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.file-meta {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  display: block;
+}
+
+/* ---------------- 提示条（n-alert） ---------------- */
+
+.notices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 0;
+}
+
+/* ---------------- 工作区布局 ---------------- */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin-top: 22px;
+}
+
+.col-left,
+.col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.col-full {
+  grid-column: 1 / -1;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+/* n-card header 插槽里的标题 */
+.card-title.n-h2 {
+  font-size: 16.5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------------- 播放器 ---------------- */
+
+.video-wrap {
+  background: var(--stage);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: var(--stage);
+}
+
+.clock {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.clock strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.clock-sep {
+  opacity: 0.5;
+}
+
+.transport {
+  margin-top: 12px;
+}
+
+.loop-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ---------------- 时间轴 ---------------- */
+
+.timeline {
+  margin-top: 14px;
+  padding: 6px 0;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.timeline.is-busy {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.tl-track {
+  position: relative;
+  height: 34px;
+  border-radius: 8px;
+  background: #eef0f6;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.tl-progress {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(24, 160, 88, 0.14);
+  border-radius: 8px 0 0 8px;
+  pointer-events: none;
+}
+
+.tl-markers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tl-markers i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(24, 160, 88, 0.45);
+}
+
+.tl-range {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  background: var(--range-soft);
+  border-left: 2px solid var(--range);
+  border-right: 2px solid var(--range);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2px;
+}
+
+.tl-range:active {
+  cursor: grabbing;
+}
+
+.tl-range.is-off {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.55);
+}
+
+.tl-range-label {
+  pointer-events: none;
+}
+
+.tl-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 44px;
+  margin-top: -22px;
+  margin-left: -7px;
+  border-radius: 6px;
+  background: var(--range);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+  cursor: ew-resize;
+  transition: transform 0.12s ease;
+}
+
+.tl-handle:hover,
+.tl-handle:focus-visible {
+  transform: scaleY(1.08);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.28);
+}
+
+/* ---------------- 时间段面板 ---------------- */
+
+.range-panel {
+  margin-top: 4px;
+}
+
+.range-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.range-fields.n-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.range-fields .n-form-item {
+  margin-bottom: 0;
+}
+
+.range-span-value {
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.range-hint,
+.range-state {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.range-state {
+  color: var(--brand-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------- 配置面板 ---------------- */
+
+.settings {
+  position: sticky;
+  top: 16px;
+}
+
+.settings-form .n-form-item {
+  margin-bottom: 14px;
+}
+
+.stack {
+  width: 100%;
+}
+
+.full {
+  width: 100%;
+}
+
+.field-hint {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.mode-grid.n-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.mode-grid .n-radio__label {
+  display: block;
+}
+
+.mode-name {
+  display: block;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.mode-desc {
+  display: block;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.num-control {
+  width: 120px;
+}
+
+.num-control.wide {
+  width: 160px;
+}
+
+.scope-box.n-descriptions {
+  margin-top: 4px;
+}
+
+.panel-actions {
+  margin-top: 18px;
+}
+
+/* ---------------- 进度 ---------------- */
+
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-thumb {
+  display: block;
+  margin-top: 12px;
+  max-height: 180px;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.progress-thumb img {
+  display: block;
+  max-height: 178px;
+  max-width: 100%;
+  border-radius: 7px;
+}
+
+/* ---------------- 结果区 ---------------- */
+
+.results-size {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.selected-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.frame-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.frame-card.is-off {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+
+.frame-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  background-color: #f1f3f7;
+  background-image: linear-gradient(45deg, #e2e6ee 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e6ee 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e6ee 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e6ee 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame-thumb .n-image,
+.frame-thumb .n-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.frame-check.n-checkbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 6px;
+  padding: 3px 5px;
+  cursor: pointer;
+}
+
+.frame-time.n-tag {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.frame-play.n-button {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+
+.frame-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.results-empty {
+  padding: 26px 0 10px;
+}
+
+/* ---------------- 指南 / FAQ ---------------- */
+
+.guide {
+  margin: 34px 0 30px;
+}
+
+.guide .n-h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+.section-gap {
+  margin-top: 30px !important;
+}
+
+.section-lead {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 14px;
+  max-width: 860px;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.guide-step {
+  margin-bottom: 10px;
+}
+
+.guide-card .n-h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.guide-card p {
+  color: var(--muted);
+  font-size: 13.5px;
+  margin: 0;
+}
+
+.tip-list {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.tip-list li {
+  margin-bottom: 8px;
+}
+
+.tip-list li:last-child {
+  margin-bottom: 0;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* ---------------- 页脚 ---------------- */
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12.5px;
+  padding: 24px 20px 30px;
+}
+
+.footer .n-p {
+  margin: 0;
+}
+
+/* ---------------- 响应式 ---------------- */
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .settings {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0 14px;
+  }
+
+  .hero .n-h1 {
+    font-size: 23px;
+  }
+
+  .hero .n-p {
+    font-size: 14px;
+  }
+
+  .guide-grid,
+  .info {
+    grid-template-columns: 1fr;
+  }
+
+  .range-fields.n-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .range-fields .n-form-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .frame-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

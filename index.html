@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <!--
+      域名占位说明（部署前统一替换）：
+      https://frame-extractor.guoguo-labs.online
+      涉及文件：index.html（canonical / og:url / JSON-LD）、public/robots.txt、public/sitemap.xml
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>视频抽帧工具 - 在线按时间段/间隔提取视频画面 PNG JPG</title>
+    <meta
+      name="description"
+      content="免费在线视频抽帧工具：加载本地视频，按帧数、间隔、关键帧、时间点或指定时间段提取画面，支持 PNG/JPG、4K/2K/1080p 分辨率与 ZIP 打包下载。全程浏览器本地处理，视频不上传。"
+    />
+    <meta
+      name="keywords"
+      content="视频抽帧,视频帧提取,在线抽帧工具,按时间段抽帧,视频截图,关键帧提取,MP4抽帧,PNG导出,JPG导出,浏览器本地处理"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#18a058" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2318a058'/%3E%3Crect x='12' y='17' width='40' height='30' rx='5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M12 27h40M12 37h40M24 17v30M40 17v30' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E"
+    />
+    <link rel="canonical" href="https://frame-extractor.guoguo-labs.online" />
+    <link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+    <link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
+    <link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
+    <link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
+    <link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="视频抽帧工具" />
+    <meta property="og:url" content="https://frame-extractor.guoguo-labs.online" />
+    <meta property="og:title" content="视频抽帧工具 - 在线按时间段/间隔提取视频画面" />
+    <meta
+      property="og:description"
+      content="加载本地视频，按帧数、间隔、关键帧、时间点或自定义时间段提取画面，导出 PNG/JPG 并打包 ZIP。浏览器本地处理，不上传视频。"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="视频抽帧工具 - 在线按时间段/间隔提取视频画面" />
+    <meta
+      name="twitter:description"
+      content="本地视频抽帧：按帧数、间隔、关键帧、时间点或时间段提取，PNG/JPG 输出，支持 ZIP 打包下载。"
+    />
+
+    <script type="application/ld+json" id="ld-app">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "视频抽帧工具",
+        "url": "https://frame-extractor.guoguo-labs.online",
+        "description": "在浏览器中加载本地视频并按帧数、时间间隔、关键帧、时间点或自定义时间段提取画面，支持 PNG/JPG 输出与 ZIP 打包下载，视频无需上传。",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires a modern browser with HTML5 video decoding (Chrome / Edge / Firefox / Safari)",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+        "featureList": [
+          "按帧数均匀抽帧",
+          "按时间间隔抽帧",
+          "关键帧提取（MP4 容器关键帧表 / 画面变化检测）",
+          "按时间点抽帧",
+          "按自定义时间段抽帧",
+          "PNG / JPG 输出与质量调节",
+          "4K / 2K / 1080p / 720p / 480p 缩放",
+          "候选帧多选与 ZIP 打包下载",
+          "全程浏览器本地处理"
+        ]
+      }
+    </script>
+    <script type="application/ld+json" id="ld-faq">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "这个视频抽帧工具免费吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "免费，无需注册或付费。实际能顺畅处理的文件大小取决于浏览器解码能力、视频时长与设备内存。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "我的视频会被上传吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "不会。视频通过浏览器本地 API 读取，解码、抽帧与打包都在你的设备上完成，只有你主动下载的图片会离开浏览器。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "支持哪些视频格式？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "取决于浏览器的解码能力。H.264 编码的 MP4、WebM 以及部分 MOV 通常可用，但文件扩展名不能保证内部编码一定被支持。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "可以只提取某个时间段的画面吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。拖动时间轴上的选区手柄，或直接输入起止时间码，设定区间后所有提取模式都只在该区间内生效；「时间段」模式则会在区间内均匀取 N 帧。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "能提取关键帧吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以。MP4 / MOV 文件会直接解析容器中的关键帧表（stss/stts），得到真实的关键帧时间；WebM 或没有关键帧表的文件会改用画面变化检测给出场景切换候选帧。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "输出图片是什么格式？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以选择无损的 PNG，或体积更小的 JPG（质量可调）。还可以限制最大分辨率（原始 / 4K / 2K / 1080p / 720p / 480p）。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "一次可以提取多少帧？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "没有硬性上限，但每帧都会占用内存。单次建议不超过 500 帧，超出的候选会自动等间隔抽稀；长时间、高分辨率素材建议缩小分辨率或缩短时间段分批处理。"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <p style="padding: 24px; font-family: sans-serif">
+        本工具需要 JavaScript 才能在浏览器内解码视频并抽帧，请启用 JavaScript 后重新打开页面。
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>抽帧工具 E2E 驱动页</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #0f172a;
+        color: #e2e8f0;
+        font-family: ui-monospace, Consolas, monospace;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 86vh;
+        border: 0;
+        background: #f6f7fb;
+      }
+      pre {
+        margin: 0;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        max-height: 14vh;
+        overflow: auto;
+      }
+      .ok {
+        color: #4ade80;
+      }
+      .bad {
+        color: #f87171;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      仅用于本地开发时的端到端验证（不参与构建，也不会进 dist）。
+      它把 test/sample.mp4 注入到 / 里的抽帧工具，再用合成指针事件测试时间轴拖拽。
+      用法：1) 把任意 MP4 放到 test/sample.mp4  2) pnpm dev  3) 打开 /test/driver.html
+    -->
+    <iframe id="app" src="/"></iframe>
+    <div style="padding: 6px 14px">
+      <button id="phase2" style="font: inherit; padding: 4px 12px; cursor: pointer">运行第二阶段：JPG + 720p + ZIP 校验</button>
+      <span id="phase2-state"></span>
+    </div>
+    <pre id="report">loading…</pre>
+
+    <script type="module">
+      const report = document.getElementById('report');
+      const lines = [];
+      let failures = 0;
+
+      function log(ok, message) {
+        if (ok === false) failures += 1;
+        const prefix = ok === null ? '  ·  ' : ok ? '  ok ' : '  FAIL';
+        lines.push(`${prefix} ${message}`);
+        report.textContent = lines.join('\n');
+      }
+
+      const frame = document.getElementById('app');
+      const appDoc = () => frame.contentDocument;
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+      async function waitFor(test, timeout = 20000, label = 'condition') {
+        const started = Date.now();
+        while (Date.now() - started < timeout) {
+          const value = test();
+          if (value) return value;
+          await sleep(80);
+        }
+        throw new Error(`超时等待：${label}`);
+      }
+
+      function pointer(el, type, x, y, pointerId = 1) {
+        el.dispatchEvent(
+          new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            clientX: x,
+            clientY: y,
+            pointerId,
+            pointerType: 'mouse',
+            isPrimary: true,
+            button: 0,
+            buttons: type === 'pointerup' ? 0 : 1,
+          }),
+        );
+      }
+
+      async function main() {
+        try {
+          log(null, '等待应用挂载…');
+          await waitFor(() => appDoc().querySelector('.dropzone'), 15000, 'app mount');
+
+          // 1) 注入真实视频文件
+          const response = await fetch('/test/sample.mp4');
+          const blob = await response.blob();
+          const file = new File([blob], 'sample.mp4', { type: 'video/mp4' });
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          const input = appDoc().querySelector('input[type=file]');
+          input.files = dt.files;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          log(true, `注入文件 ${file.name}（${(file.size / 1048576).toFixed(1)} MB）`);
+
+          // 2) 等待元数据与工作区出现
+          const stage = await waitFor(() => appDoc().querySelector('.stage'), 30000, '.stage 出现');
+          // 工作区会先渲染、元数据随后到达，所以这里等文本从占位变成真实时长
+          const metaText = await waitFor(
+            () => {
+              const text = appDoc().querySelector('.file-meta')?.textContent?.trim() || '';
+              return /^\d{2}:\d{2}/.test(text) ? text : null;
+            },
+            20000,
+            '文件元数据',
+          );
+          log(/^\d{2}:\d{2}/.test(metaText), `元数据：${metaText}`);
+
+          const video = appDoc().querySelector('video');
+          const duration = await waitFor(() => (video.duration > 0 ? video.duration : 0), 15000, 'video.duration');
+          log(duration > 0, `时长 ${duration.toFixed(3)}s / ${video.videoWidth}×${video.videoHeight}`);
+
+          // 3) 合成拖拽：起点手柄拖到 20%，终点手柄拖到 55%
+          //    每次都重新量一次轨道矩形——布局可能因滚动条/内容变化而位移
+          const rectNow = () => appDoc().querySelector('.tl-track').getBoundingClientRect();
+          const at = (ratio) => rectNow().left + rectNow().width * ratio;
+          const midY = () => rectNow().top + rectNow().height / 2;
+
+          const startHandle = appDoc().querySelector('[data-role="handle-start"]');
+          pointer(startHandle, 'pointerdown', at(0), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointermove', at(0.2), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointerup', at(0.2), midY());
+          await sleep(150);
+
+          const endHandle = appDoc().querySelector('[data-role="handle-end"]');
+          pointer(endHandle, 'pointerdown', at(1), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointermove', at(0.55), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointerup', at(0.55), midY());
+          await sleep(200);
+
+          const inputs = appDoc().querySelectorAll('.range-field input');
+          const rangeStart = inputs[0]?.value || '';
+          const rangeEnd = inputs[1]?.value || '';
+          const rangeState = appDoc().querySelector('.range-state')?.textContent?.trim() || '';
+          log(Boolean(rangeStart && rangeEnd), `拖拽后区间：${rangeStart} → ${rangeEnd}`);
+          log(/→/.test(rangeState), `区间状态文案：${rangeState}`);
+
+          const expectStart = 0.2 * duration;
+          const parse = (text) => {
+            const [hms, ms] = String(text).split('.');
+            const parts = hms.split(':').map(Number);
+            const seconds = parts.reduce((acc, v) => acc * 60 + v, 0);
+            return seconds + (Number(ms) || 0) / 1000;
+          };
+          const gotStart = parse(rangeStart);
+          const gotEnd = parse(rangeEnd);
+          log(Math.abs(gotStart - expectStart) < 0.3, `起点误差 ${(gotStart - expectStart).toFixed(3)}s（期望 ${expectStart.toFixed(3)}s）`);
+          log(Math.abs(gotEnd - 0.55 * duration) < 0.3, `终点误差 ${(gotEnd - 0.55 * duration).toFixed(3)}s`);
+
+          // 4) 区间内拖拽平移：整段向右推 10%
+          const body = appDoc().querySelector('[data-role="range-body"]');
+          pointer(body, 'pointerdown', at(0.35), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointermove', at(0.45), midY());
+          pointer(appDoc().querySelector('.tl-track'), 'pointerup', at(0.45), midY());
+          await sleep(150);
+          const moved = appDoc().querySelectorAll('.range-field input');
+          log(moved[0].value !== rangeStart, `平移后区间：${moved[0].value} → ${moved[1].value}`);
+          log(Math.abs(parse(moved[1].value) - parse(moved[0].value) - 0.35 * duration) < 0.3, `平移后长度仍为 35%：${moved[1].value} - ${moved[0].value}`);
+
+          // 5) 「当前帧设为起点 / 设为终点」按钮语义（回归：点终点不能把起点拽走）
+          const seekRatio = async (ratio) => {
+            const v = appDoc().querySelector('video');
+            await new Promise((resolve) => {
+              const onSeeked = () => {
+                v.removeEventListener('seeked', onSeeked);
+                resolve();
+              };
+              v.addEventListener('seeked', onSeeked);
+              v.currentTime = ratio * duration;
+              setTimeout(resolve, 3000);
+            });
+            await sleep(150);
+          };
+          const readRange = () =>
+            [...appDoc().querySelectorAll('.range-field input')].map((input) => parse(input.value));
+          const clickRangeBtn = (text) => {
+            const button = [...appDoc().querySelectorAll('.range-actions button')].find((b) => b.textContent.includes(text));
+            if (!button) throw new Error(`找不到按钮：${text}`);
+            button.click();
+          };
+
+          await seekRatio(0.2);
+          clickRangeBtn('设为起点');
+          await sleep(150);
+          await seekRatio(0.55);
+          clickRangeBtn('设为终点');
+          await sleep(150);
+          let range = readRange();
+          log(
+            Math.abs(range[0] - 0.2 * duration) < 0.3 && Math.abs(range[1] - 0.55 * duration) < 0.3,
+            `按钮设置区间：${range[0].toFixed(3)} → ${range[1].toFixed(3)}`,
+          );
+
+          // 5a) 关键回归：当前帧在起点之后时点「设为终点」，起点必须原地不动
+          const beforeEnd = readRange();
+          await seekRatio(0.8);
+          clickRangeBtn('设为终点');
+          await sleep(150);
+          range = readRange();
+          log(
+            Math.abs(range[0] - beforeEnd[0]) < 0.001,
+            `点「设为终点」后起点未移动：${range[0].toFixed(3)}s（原 ${beforeEnd[0].toFixed(3)}s）`,
+          );
+          log(Math.abs(range[1] - 0.8 * duration) < 0.3, `终点已更新为当前帧：${range[1].toFixed(3)}s`);
+
+          // 5b) 对称回归：当前帧在终点之前时点「设为起点」，终点必须原地不动
+          const beforeStart = readRange();
+          await seekRatio(0.3);
+          clickRangeBtn('设为起点');
+          await sleep(150);
+          range = readRange();
+          log(
+            Math.abs(range[1] - beforeStart[1]) < 0.001,
+            `点「设为起点」后终点未移动：${range[1].toFixed(3)}s（原 ${beforeStart[1].toFixed(3)}s）`,
+          );
+          log(Math.abs(range[0] - 0.3 * duration) < 0.3, `起点已更新为当前帧：${range[0].toFixed(3)}s`);
+
+          // 5c) 输入框语义：改起点不动终点，改终点不动起点
+          const setInput = async (index, value) => {
+            const input = appDoc().querySelectorAll('.range-field input')[index];
+            input.value = value;
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            await sleep(150);
+          };
+          await setInput(0, '00:20.000');
+          range = readRange();
+          log(Math.abs(range[0] - 20) < 0.01, `输入框改起点：${range[0].toFixed(3)}s`);
+          log(Math.abs(range[1] - 0.8 * duration) < 0.05, `改起点后终点未动：${range[1].toFixed(3)}s`);
+          await setInput(1, '00:40.000');
+          range = readRange();
+          log(Math.abs(range[1] - 40) < 0.01, `输入框改终点：${range[1].toFixed(3)}s`);
+          log(Math.abs(range[0] - 20) < 0.01, `改终点后起点未动：${range[0].toFixed(3)}s`);
+
+          // 5d) 当前帧落在起点之前时点「设为终点」：区间仍须有效（终点 > 起点）
+          await seekRatio(0.1);
+          clickRangeBtn('设为终点');
+          await sleep(150);
+          range = readRange();
+          log(
+            range[1] > range[0] && Math.abs(range[1] - 0.1 * duration) < 0.3,
+            `终点早于起点时区间仍有效：${range[0].toFixed(3)} → ${range[1].toFixed(3)}`,
+          );
+
+          // 6) 收尾：把区间还原成 20%–55%，留给后续人工点击验证
+          await seekRatio(0.2);
+          clickRangeBtn('设为起点');
+          await sleep(120);
+          await seekRatio(0.55);
+          clickRangeBtn('设为终点');
+          await sleep(150);
+          const restored = readRange();
+          log(
+            Math.abs(restored[0] - expectStart) < 0.3 && Math.abs(restored[1] - 0.55 * duration) < 0.3,
+            `收尾区间：${restored[0].toFixed(3)} → ${restored[1].toFixed(3)}`,
+          );
+
+          log(null, `阶段完成，失败 ${failures} 项；可继续人工点击验证`);
+          document.title = failures ? `E2E 有 ${failures} 项失败` : 'E2E 全部通过';
+        } catch (error) {
+          log(false, `异常：${error.message}`);
+          document.title = `E2E 异常：${error.message}`;
+        }
+      }
+
+      frame.addEventListener('load', () => {
+        // 拦截 iframe 内的下载：捕获 <a download> 的文件名与 blob URL，不真正落盘
+        const win = frame.contentWindow;
+        const nativeClick = win.HTMLAnchorElement.prototype.click;
+        win.HTMLAnchorElement.prototype.click = function patchedClick() {
+          if (this.download) {
+            captured.push({ name: this.download, href: this.href });
+            return undefined;
+          }
+          return nativeClick.apply(this, arguments);
+        };
+        main();
+      });
+
+      /* ---------------- 第二阶段：JPG + 720p + ZIP 校验 ---------------- */
+
+      const captured = [];
+
+      function parseZipEntries(bytes) {
+        // 从尾部找 EOCD（可能带注释，最多回退 64KB）
+        const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        let eocd = -1;
+        for (let i = bytes.length - 22; i >= Math.max(0, bytes.length - 65557); i -= 1) {
+          if (view.getUint32(i, true) === 0x06054b50) {
+            eocd = i;
+            break;
+          }
+        }
+        if (eocd < 0) return null;
+        const total = view.getUint16(eocd + 10, true);
+        const cdSize = view.getUint32(eocd + 12, true);
+        const cdOffset = view.getUint32(eocd + 16, true);
+        const names = [];
+        const decoder = new TextDecoder('utf-8');
+        let pos = cdOffset;
+        for (let i = 0; i < total && pos + 46 <= bytes.length; i += 1) {
+          if (view.getUint32(pos, true) !== 0x02014b50) return null;
+          const flags = view.getUint16(pos + 8, true);
+          const method = view.getUint16(pos + 10, true);
+          const size = view.getUint32(pos + 24, true);
+          const nameLength = view.getUint16(pos + 28, true);
+          const extraLength = view.getUint16(pos + 30, true);
+          const commentLength = view.getUint16(pos + 32, true);
+          names.push({
+            name: decoder.decode(bytes.subarray(pos + 46, pos + 46 + nameLength)),
+            utf8: (flags & 0x0800) !== 0,
+            method,
+            size,
+          });
+          pos += 46 + nameLength + extraLength + commentLength;
+        }
+        return { total, cdSize, cdOffset, names };
+      }
+
+      document.getElementById('phase2').addEventListener('click', async () => {
+        const state = document.getElementById('phase2-state');
+        const setState = (text) => {
+          state.textContent = ` ${text}`;
+        };
+        try {
+          setState('准备…');
+          const doc = appDoc();
+          const sleep2 = (ms) => new Promise((r) => setTimeout(r, ms));
+
+          // 清空已有结果
+          const clearBtn = [...doc.querySelectorAll('.results-toolbar button')].find((b) => /清空结果/.test(b.textContent));
+          clearBtn?.click();
+          await sleep2(200);
+
+          // 切到「时间段」模式
+          doc.querySelectorAll('.mode-card input[type=radio]')[4].click();
+          await sleep2(120);
+
+          // 帧数 = 3
+          const countInput = doc.querySelector('#count-input');
+          countInput.value = '3';
+          countInput.dispatchEvent(new Event('input', { bubbles: true }));
+          countInput.dispatchEvent(new Event('change', { bubbles: true }));
+          await sleep2(120);
+
+          // JPG + 720p
+          doc.querySelector('.segmented input[value="jpg"]').click();
+          doc.querySelector('.segmented input[value="720p"]').click();
+          await sleep2(150);
+
+          setState('提取中…');
+          doc.querySelector('.panel-actions .btn-primary').click();
+          await waitFor(() => doc.querySelectorAll('.frame-card').length >= 3, 90000, '3 帧结果');
+
+          const cards = [...doc.querySelectorAll('.frame-card')];
+          log(cards.length === 3, `JPG/720p 提取出 ${cards.length} 帧`);
+          const metas = cards.map((card) => card.querySelector('.frame-meta')?.textContent?.replace(/\s+/g, ' ').trim() || '');
+          log(metas.every((meta) => /1280×720/.test(meta) && /JPG/.test(meta)), `元信息：${metas[0]}`);
+
+          // 打包 ZIP（被上面的 anchor 拦截）
+          setState('打包 ZIP…');
+          const zipBtn = [...doc.querySelectorAll('.results-toolbar button')].find((b) => /ZIP/.test(b.textContent));
+          zipBtn.click();
+          await waitFor(() => captured.length > 0, 30000, '捕获 ZIP 下载');
+
+          const zip = captured[captured.length - 1];
+          log(/\.zip$/.test(zip.name), `下载文件名：${zip.name}`);
+          const blob = await (await fetch(zip.href)).blob();
+          const parsed = parseZipEntries(new Uint8Array(await blob.arrayBuffer()));
+          log(parsed?.total === 3, `ZIP 条目数：${parsed?.total}`);
+          log(
+            Boolean(parsed?.names.every((entry) => entry.method === 0 && entry.utf8 && /^sample_\d{2}-\d{2}-\d{2}-\d{3}\.jpg$/.test(entry.name))),
+            `ZIP 条目：${parsed?.names.map((entry) => entry.name).join(', ')}`,
+          );
+          log(blob.size > 0, `ZIP 体积：${(blob.size / 1048576).toFixed(2)} MB`);
+
+          setState(`完成，累计失败 ${failures} 项`);
+          document.title = failures ? `E2E 有 ${failures} 项失败` : 'E2E 全部通过';
+        } catch (error) {
+          log(false, `第二阶段异常：${error.message}`);
+          setState(`异常：${error.message}`);
+          document.title = `E2E 异常：${error.message}`;
+        }
+      });
+    </script>
+  </body>
+</html>
