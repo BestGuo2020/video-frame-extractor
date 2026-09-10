@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- hreflang 与四份 HTML 里 prerender 生成的那五条保持一致（x-default 指英文版，根路径带结尾斜杠） -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-        <loc>https://frame-extractor.guoguo-labs.online</loc>
+        <loc>https://frame-extractor.guoguo-labs.online/</loc>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
         <xhtml:link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
         <xhtml:link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
         <xhtml:link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
     </url>
     <url>
         <loc>https://frame-extractor.guoguo-labs.online/en</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
-        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
         <xhtml:link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
         <xhtml:link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
         <xhtml:link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
     </url>
     <url>
         <loc>https://frame-extractor.guoguo-labs.online/ja</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
-        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
         <xhtml:link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
         <xhtml:link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
         <xhtml:link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
     </url>
     <url>
         <loc>https://frame-extractor.guoguo-labs.online/ko</loc>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
-        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
         <xhtml:link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
         <xhtml:link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
         <xhtml:link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
     </url>
 </urlset>

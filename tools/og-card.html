@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  这张卡片只在「生成 og:image」时用：用浏览器把本页渲染出来截图为 public/og.png。
+  它不是站点页面，也不会被构建打包（放在 tools/ 下）。
+  尺寸取 1280×720 的原因见 imgcrop/tools/og-card.html 顶部的说明（视口固定、无需裁剪依赖）。
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Video Frame Extractor og:image card</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1280px; height: 720px; overflow: hidden; }
+      body {
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        background: radial-gradient(1200px 700px at 80% -15%, #4fd28a 0%, #18a058 45%, #0d5c34 100%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 84px 88px;
+      }
+      .brand { display: flex; align-items: center; gap: 18px; font-size: 31px; font-weight: 600; letter-spacing: 0.5px; opacity: 0.94; }
+      .mark { width: 54px; height: 54px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.5); position: relative; }
+      .mark::before {
+        content: ""; position: absolute; left: 10px; top: 15px; width: 30px; height: 22px;
+        border-left: 3px solid #fff; border-right: 3px solid #fff;
+      }
+      .mark::after {
+        content: ""; position: absolute; left: 18px; top: 15px; width: 3px; height: 22px;
+        background: #fff; box-shadow: 7px 0 0 #fff, 14px 0 0 #fff;
+      }
+      h1 { font-size: 80px; line-height: 1.06; font-weight: 700; letter-spacing: -2px; }
+      h1 .accent { color: #c9f7dd; }
+      .sub { margin-top: 24px; font-size: 34px; line-height: 1.35; color: rgba(255, 255, 255, 0.93); max-width: 1020px; }
+      .bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+      .strip { display: flex; gap: 11px; align-items: flex-end; }
+      .strip i { display: block; width: 44px; border-radius: 7px; background: rgba(255, 255, 255, 0.24); border: 2px solid rgba(255, 255, 255, 0.5); height: 50px; }
+      .strip i:nth-child(2) { height: 62px; background: rgba(255, 255, 255, 0.45); }
+      .strip i:nth-child(4) { height: 58px; background: rgba(255, 255, 255, 0.35); }
+      .strip i:nth-child(6) { height: 66px; background: rgba(255, 255, 255, 0.4); }
+      .note { font-size: 28px; color: rgba(255, 255, 255, 0.92); text-align: right; line-height: 1.5; }
+      .note b { font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div class="brand"><span class="mark"></span> frame-extractor.guoguo-labs.online</div>
+
+    <div>
+      <h1>Extract frames<br />from any <span class="accent">video</span></h1>
+      <p class="sub">By count, interval, keyframe, timestamp — or just one time range. PNG/JPG up to 4K, ZIP download.</p>
+    </div>
+
+    <div class="bottom">
+      <div class="strip"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="note"><b>Your video never leaves your device</b><br />Runs entirely in the browser · Free</p>
+    </div>
+  </body>
+</html>

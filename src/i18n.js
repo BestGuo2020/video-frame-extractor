@@ -2,7 +2,9 @@
 
 import { reactive } from 'vue';
 
-const messages = {
+// 导出给构建期预渲染使用（scripts/prerender.mjs 从这里取各语言正文，
+// 保证静态回退正文与运行时渲染共用同一份文案；src/main.js 不 import 它，不会进 bundle）
+export const messages = {
   zh: {
     appName: '视频抽帧工具',
     appTagline: '本地视频 · 浏览器内处理',

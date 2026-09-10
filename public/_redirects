@@ -1,2 +1,22 @@
-# Cloudflare Pages 重定向规则（单页应用：所有路径回落到 index.html）
-/*  /index.html  200
+# Cloudflare Pages 重定向规则
+#
+# ① 为什么这里没有 /*  /index.html  200 这条 catch-all：
+#    Pages 自带单页应用回退——官方文档 Serving Pages → Single-page application rendering 写明
+#    「If your project does not include a top-level 404.html file, Pages assumes that you are
+#    deploying a single-page application... Pages' default single-page application behavior matches
+#    all incoming paths to the root (/)」。
+#    本项目 public/ 下没有 404.html，所以深链本来就会回落到根页，这条规则是多余的；
+#    而它一旦生效，就可能把 /assets/index-xxx.js、/robots.txt、/og.png 也改写成 index.html
+#    （_worker.js 已删除，不再有 Function 挡在 _redirects 前面）。
+#    官方文档：https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# ② 为什么要把 /en /ja /ko 显式写出来：
+#    语言页是构建期预渲染出来的真实文件（dist/en/index.html 等），与 sitemap.xml、四份 HTML 里的
+#    hreflang 一一对应。显式声明才能保证「这些 URL 一定返回对应语言的静态页」，而不是依赖
+#    Pages 的隐式回落行为。另外 /en/* 并不匹配 /en 本身，所以每个语言都要「精确路径 + 子路径」两条。
+/en    /en/index.html    200
+/en/*  /en/index.html    200
+/ja    /ja/index.html    200
+/ja/*  /ja/index.html    200
+/ko    /ko/index.html    200
+/ko/*  /ko/index.html    200

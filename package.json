@@ -10,7 +10,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs && node scripts/verify-prerender.mjs",
+    "prerender": "node scripts/prerender.mjs",
+    "verify:prerender": "node scripts/verify-prerender.mjs",
     "preview": "vite preview",
     "selftest": "node scripts/selftest.mjs",
     "inspect": "node scripts/inspect-mp4.mjs"

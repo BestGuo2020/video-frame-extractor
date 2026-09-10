@@ -2,9 +2,16 @@
 <html lang="zh-CN">
   <head>
     <!--
-      域名占位说明（部署前统一替换）：
+      这份文件是「中文版 + 构建模板」：pnpm build 之后 scripts/prerender.mjs 会拿它当模板，
+      按 src/seo-pages.js 的配置生成 /en /ja /ko 三份静态 HTML，并把这个文件的 #app 也填上正文。
+      所以这里的 head 必须保留所有会被改写的标签（title / description / keywords / robots /
+      canonical / hreflang 五条 / og:* / twitter:* / ld-app / ld-faq），少了预渲染会直接报错。
+      正文不要手写进 <div id="app">：源码里它是空的，构建期才由 src/static-body.js 按 src/i18n.js
+      的文案填进去；手写的话 dev（Vue 现场渲染）与 dist（预渲染）会各说一套。
+
+      域名（改域名时四处一起改）：
       https://frame-extractor.guoguo-labs.online
-      涉及文件：index.html（canonical / og:url / JSON-LD）、public/robots.txt、public/sitemap.xml
+      → index.html、public/robots.txt、public/sitemap.xml、src/seo-pages.js
     -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,12 +30,14 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2318a058'/%3E%3Crect x='12' y='17' width='40' height='30' rx='5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M12 27h40M12 37h40M24 17v30M40 17v30' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E"
     />
-    <link rel="canonical" href="https://frame-extractor.guoguo-labs.online" />
-    <link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online" />
+    <!-- canonical / hreflang 的写法由 prerender 统一生成（根路径带结尾斜杠，x-default 指英文版），
+         这里保持同样的写法，dev 与 dist 才一致 -->
+    <link rel="canonical" href="https://frame-extractor.guoguo-labs.online/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
     <link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
     <link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
     <link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-    <link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online" />
+    <link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
@@ -39,12 +48,17 @@
       property="og:description"
       content="加载本地视频，按帧数、间隔、关键帧、时间点或自定义时间段提取画面，导出 PNG/JPG 并打包 ZIP。浏览器本地处理，不上传视频。"
     />
+    <!-- og.png 由 tools/og-card.html 渲染截图生成（1280×720）；缺文件时 pnpm build 只警告不失败 -->
+    <meta property="og:image" content="https://frame-extractor.guoguo-labs.online/og.png" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="视频抽帧工具 - 在线按时间段/间隔提取视频画面" />
     <meta
       name="twitter:description"
       content="本地视频抽帧：按帧数、间隔、关键帧、时间点或时间段提取，PNG/JPG 输出，支持 ZIP 打包下载。"
     />
+    <meta name="twitter:image" content="https://frame-extractor.guoguo-labs.online/og.png" />
 
     <script type="application/ld+json" id="ld-app">
       {
