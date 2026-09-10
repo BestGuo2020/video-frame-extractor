@@ -48,6 +48,8 @@ export const FAQ_KEYS = [
   ['faq5q', 'faq5a'],
   ['faq6q', 'faq6a'],
   ['faq7q', 'faq7a'],
+  // 第 8 条：隐私说明。与 src/components/GuideSection.vue 的 FAQ 数组保持一一对应
+  ['faq8q', 'faq8a'],
 ];
 
 /**

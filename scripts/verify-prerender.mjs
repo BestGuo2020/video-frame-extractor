@@ -237,7 +237,7 @@ for (const item of readable) {
   check(`${rel} #app 正文长度 > 800 字符`, text.length > 800, `→ 实际 ${text.length} 字符`);
   check(`${rel} #app 含 H1 且只有一个`, (app.match(/<h1\b/gi) || []).length === 1, `→ ${(app.match(/<h1\b/gi) || []).length} 个`);
   check(`${rel} #app 正文含本语言 heroTitle`, text.includes(messageSet.heroTitle));
-  check(`${rel} #app 里七个 FAQ 都是 <details><summary>`, (app.match(/<details>/g) || []).length === FAQ_KEYS.length);
+  check(`${rel} #app 里 ${FAQ_KEYS.length} 个 FAQ 都是 <details><summary>`, (app.match(/<details>/g) || []).length === FAQ_KEYS.length);
   check(`${rel} #app 正文含本语言 footerNote`, text.includes(messageSet.footerNote));
 }
 

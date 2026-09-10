@@ -167,7 +167,14 @@ export const messages = {
     faq7q: '一次可以提取多少帧？',
     faq7a: '没有硬性上限，但每帧都会占用内存。单次建议不超过 500 帧，超出会自动等间隔抽稀；长视频建议缩小分辨率或分段处理。',
 
-    footerNote: '所有处理均在本地浏览器完成 · 不上传视频 · 无广告追踪',
+    faq8q: '这个工具会收集我的数据吗？',
+    faq8a: '你的视频和抽出的图片不会离开你的设备：解码、抽帧、打包全部在这个浏览器标签页里完成，没有上传接口。和任何网站一样，我们的托管与统计服务会收到标准的请求信息（IP 地址、浏览器标识、请求的页面），统计不写 Cookie、也不做用户画像。如果本站以后展示第三方广告，广告方可能设置自己的 Cookie，你可以在浏览器里屏蔽，屏蔽后工具照常可用。',
+
+    // 页脚只写「永远可验证为真」的两件事：本地处理、不上传。
+    // 这里曾经写的是「无广告追踪」——只要接了任何第三方广告它就不成立了，
+    // 而隐私承诺被打脸在英文市场的代价，远大于那点广告收入。
+    // 广告的存在与边界写在 faq8 里；改页脚前先想清楚哪一句是可验证的。
+    footerNote: '所有处理均在本地浏览器完成 · 不上传视频',
   },
 
   en: {
@@ -325,7 +332,13 @@ export const messages = {
     faq7q: 'How many frames can I extract at once?',
     faq7a: 'There is no hard limit, but every frame costs memory. Keep a run under 500 frames — extras are thinned evenly. For long videos, lower the resolution or work in batches.',
 
-    footerNote: 'Everything runs locally in your browser · no uploads · no ad tracking',
+    faq8q: 'What data does this tool collect?',
+    faq8a: 'Your video and the frames you extract never leave your device: decoding, extraction and ZIP packaging all happen in this browser tab, and there is no upload endpoint. Like any website, our hosting and analytics providers receive standard request information (IP address, browser user agent, the page you requested). Our analytics is cookie-free and does not build a profile of you. If this site displays third-party ads, the ad network may set its own cookies — you can block them in your browser and the tool keeps working.',
+
+    // Keep the footer to the two claims that stay true no matter how the site is monetised:
+    // local processing and no upload. It used to promise "no ad tracking", which any
+    // third-party ad breaks — see the zh block above for the full reasoning.
+    footerNote: 'Everything runs locally in your browser · your video is never uploaded',
   },
 
   ja: {
@@ -490,7 +503,10 @@ export const messages = {
     faq7q: '一度に何フレーム抽出できますか？',
     faq7a: '硬性の上限はありませんが、フレームごとにメモリを消費します。1 回 500 フレーム以内を推奨し、超過分は自動で間引かれます。長い動画は解像度を下げるか分割処理がおすすめです。',
 
-    footerNote: 'すべての処理はブラウザ内でローカルに完了 · 動画のアップロードなし · 広告トラッキングなし',
+    faq8q: 'データは収集されますか？',
+    faq8a: '動画と抽出した画像がデバイスの外に出ることはありません。デコード・フレーム抽出・ZIP 作成はすべてこのブラウザタブ内で完結し、アップロード用のエンドポイントはありません。一般的なウェブサイトと同様、ホスティングとアクセス解析の提供元は標準的なリクエスト情報（IP アドレス、ユーザーエージェント、閲覧したページ）を受け取ります。解析は Cookie を使用せず、個人を特定するプロファイリングも行いません。今後サードパーティ広告を表示する場合、広告配信元が独自の Cookie を設定することがありますが、ブラウザでブロックしてもツールは問題なく動作します。',
+
+    footerNote: 'すべての処理はブラウザ内でローカルに完了 · 動画はアップロードされません',
   },
 
   ko: {
@@ -655,7 +671,10 @@ export const messages = {
     faq7q: '한 번에 몇 프레임까지 추출할 수 있나요?',
     faq7a: '하드 제한은 없지만 프레임마다 메모리를 사용합니다. 한 번에 500 프레임 이내를 권장하며 초과분은 자동으로 균등 희석됩니다. 긴 동영상은 해상도를 낮추거나 나누어 처리하세요.',
 
-    footerNote: '모든 처리는 브라우저 로컬에서 완료 · 동영상 업로드 없음 · 광고 추적 없음',
+    faq8q: '어떤 데이터를 수집하나요?',
+    faq8a: '동영상과 추출한 이미지는 기기를 벗어나지 않습니다. 디코딩, 프레임 추출, ZIP 생성은 모두 이 브라우저 탭 안에서 완료되며 업로드 엔드포인트가 없습니다. 일반적인 웹사이트와 마찬가지로 호스팅과 분석 제공자는 표준 요청 정보(IP 주소, 브라우저 사용자 에이전트, 요청한 페이지)를 받습니다. 분석은 쿠키를 사용하지 않고 개인 프로파일링도 하지 않습니다. 향후 제3자 광고를 표시하는 경우 광고 네트워크가 자체 쿠키를 설정할 수 있지만, 브라우저에서 차단해도 도구는 정상 동작합니다.',
+
+    footerNote: '모든 처리는 브라우저 로컬에서 완료 · 동영상은 업로드되지 않습니다',
   },
 };
 

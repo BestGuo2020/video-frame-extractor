@@ -41,7 +41,7 @@ pnpm selftest "C:\Users\me\Videos\demo.mp4"
 | 输出格式 | PNG（无损）/ JPG（质量 50–100% 可调） |
 | 最大分辨率 | 原始 / 4K / 2K / 1080p / 720p / 480p（按外接矩形等比缩放，永不放大） |
 | 结果管理 | 逐帧勾选、单张保存、批量下载、一键打包 ZIP、定位回看 |
-| 隐私 | 全程本地处理，无接口调用、无上传、无广告追踪 |
+| 隐私 | 全程本地处理、不上传视频；统计不写 Cookie。数据边界（含「若展示第三方广告」的说明）见页面 FAQ 第 8 条 |
 | 多语言 | 中文 / English / 日本語 / 한국어（`localStorage` 记忆；URL 带 `/en` `/ja` `/ko` 时自动切换，四份语言页在构建期预渲染成静态 HTML） |
 
 ---
@@ -146,7 +146,7 @@ pnpm selftest "C:\path\to\video.mp4"
 pnpm verify:prerender     # 单独重跑断言（需要先有 dist/）
 ```
 
-`pnpm build` 的最后一步会自动跑它。覆盖：四份文件存在、`<html lang>` / `title` / `description` / `keywords` / `robots`、canonical 指向自身、五条 hreflang 四份一致、`og:*` 与 `twitter:*`（含 1280×720 的 `og:image`）、两段 JSON-LD 与本语言文案逐条一致、`#app` 静态正文长度 > 800 字符且含 H1 与七个 `<details>`、语言纯净度（`en`/`ko` 的 `#app` 里不允许出现 CJK 汉字；`ja` 必须含假名且不允许出现「只存在于中文文案里的字符」）、Vue 挂载入口仍在、`dist/_worker.js` 不存在、域名四处一致。
+`pnpm build` 的最后一步会自动跑它。覆盖：四份文件存在、`<html lang>` / `title` / `description` / `keywords` / `robots`、canonical 指向自身、五条 hreflang 四份一致、`og:*` 与 `twitter:*`（含 1280×720 的 `og:image`）、两段 JSON-LD 与本语言文案逐条一致、`#app` 静态正文长度 > 800 字符且含 H1 与八个 `<details>`、语言纯净度（`en`/`ko` 的 `#app` 里不允许出现 CJK 汉字；`ja` 必须含假名且不允许出现「只存在于中文文案里的字符」）、Vue 挂载入口仍在、`dist/_worker.js` 不存在、域名四处一致。
 
 ### 浏览器端到端
 
@@ -216,3 +216,12 @@ Get-ChildItem index.html, public\robots.txt, public\sitemap.xml, src\seo-pages.j
 ## 隐私
 
 视频通过浏览器的本地 API 读取，解码与抽帧都在你的设备上完成；页面没有任何上传接口。只有你主动点击下载的图片或 ZIP 会离开浏览器。
+
+### 变现与隐私承诺的边界（改文案前必读）
+
+页脚和 FAQ 里的隐私文案有一条硬规则：**只写永远可验证为真的内容**。
+
+- 页脚（`footerNote`，四种语言）只保留两件事：本地处理、不上传视频。这两件事无论站点怎么变现都成立。
+- 数据边界写在 FAQ 第 8 条（`faq8q` / `faq8a`）：明确说明托管与统计会收到标准请求信息、统计不写 Cookie，并交代「若展示第三方广告，广告方可能设置自己的 Cookie」。用"如果/可能"表述，是为了让这句话在接广告前后都成立。
+- **曾经页脚写的是"无广告追踪"** —— 只要接入任何第三方广告它立刻变成假话。这条历史在 git log 里能查到（`add ads code` → `remove ads`）：当时测试的 popunder 广告会劫持页面上任意点击、跳转到 YouTube 内容套利页，既毁体验又让这句承诺不成立，所以广告被移除、文案改成现在这样。
+- 若将来要接广告：优先 AdSense/AdX 这类有品牌安全与品类屏蔽的正规需求方；低档自助联盟（PropellerAds / Monetag / Adsterra 这一档）没有语言匹配、没有自助黑名单，只能逐个 campaign 发工单屏蔽且 CPM 会降。**任何第三方脚本一旦引入，`footerNote` 与 FAQ 第 8 条必须同时复核。**

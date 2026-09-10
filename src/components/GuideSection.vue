@@ -26,6 +26,10 @@ const FAQ = [
   { q: 'faq5q', a: 'faq5a' },
   { q: 'faq6q', a: 'faq6a' },
   { q: 'faq7q', a: 'faq7a' },
+  // 第 8 条是隐私说明（数据收集边界、统计是否用 Cookie、广告可能带来的 Cookie）。
+  // 它与 src/static-body.js 的 FAQ_KEYS 必须保持一一对应 —— 静态正文、JSON-LD 的 FAQPage
+  // 和这个组件共用同一份问答，少一条就会出现「结构化数据与页面不符」。
+  { q: 'faq8q', a: 'faq8a' },
 ];
 </script>
 
