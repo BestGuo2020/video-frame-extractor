@@ -3,6 +3,10 @@
   这张卡片只在「生成 og:image」时用：用浏览器把本页渲染出来截图为 public/og.png。
   它不是站点页面，也不会被构建打包（放在 tools/ 下）。
   尺寸取 1280×720 的原因见 imgcrop/tools/og-card.html 顶部的说明（视口固定、无需裁剪依赖）。
+
+  怎么渲染（浏览器不接受 file://，必须走 http）：pnpm dev 之后浏览器打开
+  http://localhost:5174/tools/og-card.html（端口见 vite.config.js），截取整个 1280×720 视口，
+  覆盖 public/og.png。两份 README 里都写了同样的步骤。
 -->
 <html lang="en">
   <head>
