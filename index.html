@@ -157,8 +157,14 @@
       </p>
     </noscript>
     <script type="module" src="/src/main.js"></script>
-    <script src="https://5gvci.com/act/files/tag.min.js?z=11770967" data-cfasync="false" async></script>
-    <script>(function(s){s.dataset.zone='11770972',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>(function(s){s.dataset.zone='11770973',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <!--
+      这里曾经挂着三个第三方广告标签（两种推送格式 + 一种插屏，共三个 zone），已全部撤掉；
+      配套的推送 service worker（public/sw.js）也一并删除。完整背景见 README 的「变现与隐私承诺的边界」。
+
+      排查同类问题的教训：**不要按品牌名搜代码** —— 这类标签引用的是各家自己的域名，按名字搜永远搜不到；
+      要按「script 标签引用了外部 src」这个结构去搜。scripts/verify-prerender.mjs 里已经加了
+      「四份 HTML 不允许出现任何外部脚本标签」的硬断言，防止它们再溜回来。
+      （此处刻意不写具体域名、品牌和文件名：这段注释会随产物上线，写全了只会让以后的排查产生假阳性。）
+    -->
   </body>
 </html>

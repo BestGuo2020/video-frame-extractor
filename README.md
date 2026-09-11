@@ -225,3 +225,4 @@ Get-ChildItem index.html, public\robots.txt, public\sitemap.xml, src\seo-pages.j
 - 数据边界写在 FAQ 第 8 条（`faq8q` / `faq8a`）：明确说明托管与统计会收到标准请求信息、统计不写 Cookie，并交代「若展示第三方广告，广告方可能设置自己的 Cookie」。用"如果/可能"表述，是为了让这句话在接广告前后都成立。
 - **曾经页脚写的是"无广告追踪"** —— 只要接入任何第三方广告它立刻变成假话。这条历史在 git log 里能查到（`add ads code` → `remove ads`）：当时测试的 popunder 广告会劫持页面上任意点击、跳转到 YouTube 内容套利页，既毁体验又让这句承诺不成立，所以广告被移除、文案改成现在这样。
 - 若将来要接广告：优先 AdSense/AdX 这类有品牌安全与品类屏蔽的正规需求方；低档自助联盟（PropellerAds / Monetag / Adsterra 这一档）没有语言匹配、没有自助黑名单，只能逐个 campaign 发工单屏蔽且 CPM 会降。**任何第三方脚本一旦引入，`footerNote` 与 FAQ 第 8 条必须同时复核。**
+- **`public/sw.js` 已删除（这条教训比文件本身重要）**：它是 Monetag 推送通知用的 service worker 加载器，全文只有三行 —— `importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')` 加一个 zoneId。删掉页面上的广告脚本**不等于**删掉它：它一直躺在 `public/` 里，每次构建都会被拷进 `dist/`，浏览器一旦注册就会独立于页面存活、继续弹推送。本项目从未上线，所以没有访客注册过它。**但如果某个站的 sw.js 曾在线上生效过，只删文件是不够的** —— 已注册的 service worker 会长期留在访客浏览器里，必须在同一路径部署一个「自杀」版本（`self.registration.unregister()` 并清缓存）才算清干净。

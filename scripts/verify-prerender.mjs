@@ -266,6 +266,26 @@ for (const item of readable) {
   );
 }
 
+// 站上不允许再出现任何第三方脚本。
+// 为什么用「结构」而不是「品牌名」断言：广告联盟的标签用的是各家自己的域名
+// （本仓库实际踩过：Monetag 的标签是 5gvci.com / nap5k.com / n6wxm.com），
+// 按 "monetag" 搜代码永远搜不到，只有按 <script src="https://…"> 这个结构才拦得住。
+const AD_DOMAIN_RE =
+  /5gvci|nap5k|n6wxm|monetag|moneytag|adsterra|propellerads|effectivecpm|highperformanceformat|invoke\.js|adsbygoogle|tag\.min\.js|vignette\.min\.js/i;
+
+for (const item of readable) {
+  const masked = maskComments(item.html);
+  const external = masked.match(/<script\b[^>]*\bsrc="https?:\/\/[^"]+"/gi) || [];
+  check(`${item.rel} 无外部脚本标签`, external.length === 0, external.join(' , '));
+  // 域名检查也必须在「屏蔽注释后」的文本上做：index.html 里那段说明广告历史的注释
+  // 本身就写着这些域名，否则会把自己的说明当成广告命中。
+  check(
+    `${item.rel} 无已知广告联盟域名`,
+    !AD_DOMAIN_RE.test(masked),
+    (masked.match(AD_DOMAIN_RE) || []).join(',')
+  );
+}
+
 console.log('\n[语言纯净度]');
 const zhRoot = readable.find((item) => item.pathname === '/');
 if (zhRoot) {
