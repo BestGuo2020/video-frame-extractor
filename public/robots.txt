@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://frame-extractor.guoguo-labs.online/sitemap.xml
+Sitemap: https://video-frame-extractor.guoguo-labs.online/sitemap.xml

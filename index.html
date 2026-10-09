@@ -10,7 +10,7 @@
       的文案填进去；手写的话 dev（Vue 现场渲染）与 dist（预渲染）会各说一套。
 
       域名（改域名时四处一起改）：
-      https://frame-extractor.guoguo-labs.online
+      https://video-frame-extractor.guoguo-labs.online
       → index.html、public/robots.txt、public/sitemap.xml、src/seo-pages.js
     -->
     <meta charset="UTF-8" />
@@ -32,24 +32,24 @@
     />
     <!-- canonical / hreflang 的写法由 prerender 统一生成（根路径带结尾斜杠，x-default 指英文版），
          这里保持同样的写法，dev 与 dist 才一致 -->
-    <link rel="canonical" href="https://frame-extractor.guoguo-labs.online/" />
-    <link rel="alternate" hreflang="zh-CN" href="https://frame-extractor.guoguo-labs.online/" />
-    <link rel="alternate" hreflang="en" href="https://frame-extractor.guoguo-labs.online/en" />
-    <link rel="alternate" hreflang="ja" href="https://frame-extractor.guoguo-labs.online/ja" />
-    <link rel="alternate" hreflang="ko" href="https://frame-extractor.guoguo-labs.online/ko" />
-    <link rel="alternate" hreflang="x-default" href="https://frame-extractor.guoguo-labs.online/en" />
+    <link rel="canonical" href="https://video-frame-extractor.guoguo-labs.online/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://video-frame-extractor.guoguo-labs.online/" />
+    <link rel="alternate" hreflang="en" href="https://video-frame-extractor.guoguo-labs.online/en" />
+    <link rel="alternate" hreflang="ja" href="https://video-frame-extractor.guoguo-labs.online/ja" />
+    <link rel="alternate" hreflang="ko" href="https://video-frame-extractor.guoguo-labs.online/ko" />
+    <link rel="alternate" hreflang="x-default" href="https://video-frame-extractor.guoguo-labs.online/en" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="视频抽帧工具" />
-    <meta property="og:url" content="https://frame-extractor.guoguo-labs.online" />
+    <meta property="og:url" content="https://video-frame-extractor.guoguo-labs.online" />
     <meta property="og:title" content="视频抽帧工具 - 在线按时间段/间隔提取视频画面" />
     <meta
       property="og:description"
       content="加载本地视频，按帧数、间隔、关键帧、时间点或自定义时间段提取画面，导出 PNG/JPG 并打包 ZIP。浏览器本地处理，不上传视频。"
     />
     <!-- og.png 由 tools/og-card.html 渲染截图生成（1280×720）；缺文件时 pnpm build 只警告不失败 -->
-    <meta property="og:image" content="https://frame-extractor.guoguo-labs.online/og.png" />
+    <meta property="og:image" content="https://video-frame-extractor.guoguo-labs.online/og.png" />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="720" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -58,14 +58,14 @@
       name="twitter:description"
       content="本地视频抽帧：按帧数、间隔、关键帧、时间点或时间段提取，PNG/JPG 输出，支持 ZIP 打包下载。"
     />
-    <meta name="twitter:image" content="https://frame-extractor.guoguo-labs.online/og.png" />
+    <meta name="twitter:image" content="https://video-frame-extractor.guoguo-labs.online/og.png" />
 
     <script type="application/ld+json" id="ld-app">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "视频抽帧工具",
-        "url": "https://frame-extractor.guoguo-labs.online",
+        "url": "https://video-frame-extractor.guoguo-labs.online",
         "description": "在浏览器中加载本地视频并按帧数、时间间隔、关键帧、时间点或自定义时间段提取画面，支持 PNG/JPG 输出与 ZIP 打包下载，视频无需上传。",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "All",

@@ -21,7 +21,7 @@
 
 ## 一、video-frame-extractor 页面清单
 
-站点：`https://frame-extractor.guoguo-labs.online`（已上线），主打「视频不上传」。
+站点：`https://video-frame-extractor.guoguo-labs.online`（已上线），主打「视频不上传」。
 
 ```
 /en                                              #1  工具页（已存在，补元数据）
@@ -36,7 +36,7 @@
 /en/blog/ffmpeg-vs-browser-frame-extraction      #10 对比页
 ```
 
-### #1 ｜ `https://frame-extractor.guoguo-labs.online/en` — 工具页
+### #1 ｜ `https://video-frame-extractor.guoguo-labs.online/en` — 工具页
 
 - **主关键词**：`video frame extractor`
 - **Title**（54 字符）：`Video Frame Extractor – Extract Frames in Your Browser`

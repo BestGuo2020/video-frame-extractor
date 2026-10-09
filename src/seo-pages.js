@@ -8,7 +8,7 @@
 // 文案来源分工：页面正文来自 src/i18n.js（messages），只有 head 里的 SEO 文案在这里，
 // 因为它们是给搜索引擎/社交平台看的，与页面上显示的措辞并不逐字相同。
 
-export const SITE_ORIGIN = 'https://frame-extractor.guoguo-labs.online';
+export const SITE_ORIGIN = 'https://video-frame-extractor.guoguo-labs.online';
 
 // 根路径统一带结尾斜杠：canonical / og:url / hreflang / sitemap 四处写法必须完全一致，
 // 否则 https://x 与 https://x/ 会被当成两个网址，白白分散权重。

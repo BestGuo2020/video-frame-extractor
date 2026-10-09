@@ -173,22 +173,22 @@ pnpm dev
 
 ```powershell
 # 1) 确认 Pages 返回的是该语言的预渲染文件，而不是中文壳
-curl.exe -s https://frame-extractor.guoguo-labs.online/en | Select-String '<html lang=','<h1'
+curl.exe -s https://video-frame-extractor.guoguo-labs.online/en | Select-String '<html lang=','<h1'
 #    必须看到 lang="en" 且 h1 是英文。只验证 <title> 不够 —— 旧方案（边缘改写 meta）
 #    正是只改了 head，正文一直是中文，爬虫看到的也就一直是中文。
 # 2) canonical 必须自指，否则该语言页永远无法独立收录
-curl.exe -s https://frame-extractor.guoguo-labs.online/en | Select-String 'rel="canonical"'
+curl.exe -s https://video-frame-extractor.guoguo-labs.online/en | Select-String 'rel="canonical"'
 # 3) robots / sitemap 指向当前域名
-curl.exe -s https://frame-extractor.guoguo-labs.online/robots.txt
-curl.exe -s https://frame-extractor.guoguo-labs.online/sitemap.xml | Select-String '<loc>'
+curl.exe -s https://video-frame-extractor.guoguo-labs.online/robots.txt
+curl.exe -s https://video-frame-extractor.guoguo-labs.online/sitemap.xml | Select-String '<loc>'
 # 4) 用 AI 爬虫的 UA 抓一次：它们不执行 JS，只能读静态 HTML
-curl.exe -s -A "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)" https://frame-extractor.guoguo-labs.online/en | Select-String '<h1'
+curl.exe -s -A "Mozilla/5.0 (compatible; GPTBot/1.2; +https://openai.com/gptbot)" https://video-frame-extractor.guoguo-labs.online/en | Select-String '<h1'
 ```
 
 若第 1 条返回的仍是中文壳，说明 Pages 没命中 `dist/en/index.html`：检查 `public/_redirects` 里的六条语言规则是否存在（`verify-prerender.mjs` 会断言）。
 另：**不要**在 Cloudflare 后台开启托管的 robots.txt / AI 爬虫管控 —— 它默认会 Disallow GPTBot / ClaudeBot / CCBot 等，等于把 AI 搜索引用这条渠道关掉（头号竞品 frameextractor.net 就关着）。
 
-**域名已是 `https://frame-extractor.guoguo-labs.online`**；改域名时要同步改下面四处（`src/seo-pages.js` 是构建期预渲染的配置源，漏掉它的话四份 HTML 的 canonical / og:url / hreflang / JSON-LD 都会指向旧域名）：
+**域名已是 `https://video-frame-extractor.guoguo-labs.online`**；改域名时要同步改下面四处（`src/seo-pages.js` 是构建期预渲染的配置源，漏掉它的话四份 HTML 的 canonical / og:url / hreflang / JSON-LD 都会指向旧域名）：
 
 - `index.html`（模板：`canonical`、`og:url`、`og:image`、`twitter:image`、五条 hreflang、两处 JSON-LD 的 `url`）
 - `public/robots.txt`（Sitemap 地址）
