@@ -140,6 +140,7 @@ export function renderStaticBody(lang, messages) {
   lines.push(`${pad}  </main>`);
   lines.push(`${pad}  <footer class="footer">`);
   lines.push(`${pad}    <p class="n-p">${t('footerNote')}</p>`);
+  lines.push(`${pad}    <a href="${t('privacyHref')}">${t('privacyLabel')}</a>`);
   lines.push(`${pad}  </footer>`);
   lines.push(`${pad}</div>`);
 

@@ -6,6 +6,8 @@ import { reactive } from 'vue';
 // 保证静态回退正文与运行时渲染共用同一份文案；src/main.js 不 import 它，不会进 bundle）
 export const messages = {
   zh: {
+    privacyLabel: '隐私政策',
+    privacyHref: '/privacy/',
     appName: '视频抽帧工具',
     appTagline: '本地视频 · 浏览器内处理',
 
@@ -178,6 +180,8 @@ export const messages = {
   },
 
   en: {
+    privacyLabel: 'Privacy Policy',
+    privacyHref: '/privacy/en/',
     appName: 'Frame Extractor',
     appTagline: 'Local video · processed in your browser',
 
@@ -342,6 +346,8 @@ export const messages = {
   },
 
   ja: {
+    privacyLabel: 'プライバシーポリシー',
+    privacyHref: '/privacy/ja/',
     appName: '動画フレーム抽出ツール',
     appTagline: 'ローカル動画 · ブラウザ内で処理',
 
@@ -510,6 +516,8 @@ export const messages = {
   },
 
   ko: {
+    privacyLabel: '개인정보 처리방침',
+    privacyHref: '/privacy/ko/',
     appName: '동영상 프레임 추출 도구',
     appTagline: '로컬 동영상 · 브라우저 내 처리',
 

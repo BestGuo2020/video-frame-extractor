@@ -352,6 +352,22 @@ if (existsSync(redirectsFile)) {
   );
 }
 
+console.log('\n[隐私政策：独立静态页与页脚入口]');
+check('隐私页样式存在', existsSync(path.join(DIST, 'privacy/style.css')));
+for (const { page, html, rel } of readable) {
+  const policyPath = messages[page.lang].privacyHref;
+  check(`${rel} 静态页脚有隐私入口`, html.includes(`href="${policyPath}"`));
+  const file = path.join(DIST, policyPath.slice(1), 'index.html');
+  check(`${page.lang} 隐私页存在`, existsSync(file));
+  if (!existsSync(file)) continue;
+  const policy = readFileSync(file, 'utf8');
+  eq(`${page.lang} 隐私页语言`, htmlLangOf(policy), page.htmlLang);
+  eq(`${page.lang} 隐私页 canonical`, canonicalHref(policy), SITE_ORIGIN + policyPath);
+  check(`${page.lang} 隐私页包含 Google 退出入口`, policy.includes('href="https://myadcenter.google.com/"'));
+  check(`${page.lang} 隐私页包含第三方退出入口`, policy.includes('href="https://www.aboutads.info/choices/"'));
+  check(`${page.lang} 隐私页不加载脚本`, !/<script\b/i.test(policy));
+}
+
 console.log('\n[域名一致性（改域名时四处一起改）]');
 for (const file of ['index.html', 'public/robots.txt', 'public/sitemap.xml', 'src/seo-pages.js']) {
   const source = readFileSync(path.join(ROOT, file), 'utf8');

@@ -573,6 +573,7 @@ onBeforeUnmount(() => {
 
       <footer class="footer">
         <n-p>{{ t('footerNote') }}</n-p>
+        <a :href="t('privacyHref')">{{ t('privacyLabel') }}</a>
       </footer>
     </div>
   </n-config-provider>

@@ -669,6 +669,18 @@ a:hover {
   margin: 0;
 }
 
+.footer a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #176742;
+  text-underline-offset: 3px;
+}
+
+.footer a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
 /* ---------------- 响应式 ---------------- */
 
 @media (max-width: 900px) {
