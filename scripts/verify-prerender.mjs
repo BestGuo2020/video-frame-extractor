@@ -12,6 +12,27 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runInNewContext } from 'node:vm';
+
+const GA_SCRIPT_URL = 'https://www.googletagmanager.com/gtag/js?id=G-2PMNQJPWBM';
+
+function verifyGoogleTag(label, html) {
+  const head = maskComments(html).match(/<head>([\s\S]*?)<\/head>/i)?.[1] || '';
+  const scripts = [...head.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+  const loaders = scripts.filter(([, attrs]) => attrs.includes(`src="${GA_SCRIPT_URL}"`));
+  check(`${label} GA 异步脚本仅加载一次`, loaders.length === 1 && /\basync\b/.test(loaders[0][1]));
+  const initializers = scripts.filter(([, attrs, body]) => !/\bsrc=/.test(attrs) && body.includes('gtag('));
+  eq(`${label} GA 初始化仅执行一次`, initializers.length, 1);
+  try {
+    const context = {};
+    context.window = context;
+    runInNewContext(initializers[0]?.[2] || '', context, { timeout: 1000 });
+    const commands = context.dataLayer?.map(command => Array.from(command)) || [];
+    check(`${label} GA 测量 ID 与初始化正确`, commands.length === 2 && commands[0][0] === 'js' && commands[1][0] === 'config' && commands[1][1] === 'G-2PMNQJPWBM');
+  } catch (error) {
+    check(`${label} GA 初始化可执行`, false, error.message);
+  }
+}
 import { messages } from '../src/i18n.js';
 import { HREFLANG, OG_IMAGE, SEO_PAGES, SHARED_META, SITE_ORIGIN, outputFileFor, pageUrl } from '../src/seo-pages.js';
 import { FAQ_KEYS } from '../src/static-body.js';
@@ -276,7 +297,9 @@ const AD_DOMAIN_RE =
 for (const item of readable) {
   const masked = maskComments(item.html);
   const external = masked.match(/<script\b[^>]*\bsrc="https?:\/\/[^"]+"/gi) || [];
-  check(`${item.rel} 无外部脚本标签`, external.length === 0, external.join(' , '));
+  const unexpected = external.filter(tag => !tag.endsWith(`src="${GA_SCRIPT_URL}"`));
+  check(`${item.rel} 无未授权的外部脚本标签`, unexpected.length === 0, unexpected.join(' , '));
+  verifyGoogleTag(item.rel, item.html);
   // 域名检查也必须在「屏蔽注释后」的文本上做：index.html 里那段说明广告历史的注释
   // 本身就写着这些域名，否则会把自己的说明当成广告命中。
   check(
@@ -365,7 +388,9 @@ for (const { page, html, rel } of readable) {
   eq(`${page.lang} 隐私页 canonical`, canonicalHref(policy), SITE_ORIGIN + policyPath);
   check(`${page.lang} 隐私页包含 Google 退出入口`, policy.includes('href="https://myadcenter.google.com/"'));
   check(`${page.lang} 隐私页包含第三方退出入口`, policy.includes('href="https://www.aboutads.info/choices/"'));
-  check(`${page.lang} 隐私页不加载脚本`, !/<script\b/i.test(policy));
+  eq(`${page.lang} 隐私页仅加载 GA 脚本`, (policy.match(/<script\b/gi) || []).length, 2);
+  verifyGoogleTag(`隐私页 ${page.lang}`, policy);
+  check(`${page.lang} 隐私页说明 GA Cookie`, policy.includes('Google Analytics 4'));
 }
 
 console.log('\n[域名一致性（改域名时四处一起改）]');
